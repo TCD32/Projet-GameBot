@@ -1,0 +1,7 @@
+.carousel-control {
+    transition: all 0.5s ease-in;
+}
+
+.carousel-control-arrow {
+    font-size: 35px;
+}

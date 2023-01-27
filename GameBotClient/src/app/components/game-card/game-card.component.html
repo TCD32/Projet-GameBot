@@ -1,0 +1,24 @@
+<div class="card shadow border-0 mb-5">
+    <div class="card-img-top" [ngStyle]="{'background': gradient}"></div>
+    <div class="card-img-overlay">
+        <h2 class="card-title game-title">
+            {{ game.title }}
+        </h2>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <img class="card-img-body" [src]="game.image" alt="Game Image">
+        </div>
+        <h5 class="card-title">{{ game.players }} joueurs</h5>
+        <p class="card-text text-muted">
+            {{ game.description }}
+        </p>
+        <button href="#" class="btn game-btn float-end"
+            [ngStyle]="hover ? buttonHoverStyle : buttonStyle"
+            (mouseover)="hover = true" (mouseleave)="hover = false"
+            (click)="onPlayGame()"
+        >
+            JOUER
+        </button>
+    </div>
+</div>

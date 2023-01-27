@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+    </div>
+    <div class="row">
+        <form [formGroup]="propositionForm" (ngSubmit)="onSubmitProposition()">
+            <div class="text-center">
+                <h4>
+                    Proposition
+                </h4>
+            </div>
+            <input class="form-control" formControlName="proposition">
+            <button type="submit" class="btn btn-primary">
+                <span>VALIDER</span>
+            </button>
+        </form>    
+    </div>
+</div>

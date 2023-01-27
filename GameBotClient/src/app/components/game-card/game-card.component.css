@@ -1,0 +1,25 @@
+.card {
+    border-radius: 5%;
+}
+
+.card-img-overlay {
+    pointer-events: none
+}
+
+.card-img-body {
+    border-radius: 5%;
+}
+
+.game-title {
+    color: white;
+}
+
+.game-btn {
+    color: white;
+}
+
+.card-img-top {
+    width: 100%;
+    min-height: 80px;
+    object-fit: cover;
+}
