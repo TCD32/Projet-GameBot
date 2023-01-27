@@ -72,11 +72,12 @@ class GameService:
         game = self.get_game(game_id)
 
         # starting game if enough players are ready
-        game_state = game.game_state
+        game_state = game.state
         game_state.players_ready[player_id] = not game_state.players_ready.get(player_id, False)
-        if len([e for e in game_state.players_ready.values() if e]) == game_state.game.players:
+        if len([e for e in list(game_state.players_ready.values()) if e]) == game.players:
+            print(f"Enough players ready to start {game.title}")
             game_state.game_running = True
-            self.start_game(game)
+            self.start_game(game.id)
 
     def start_game(self, game_id: str):
         if self.running_game is not None:
@@ -87,9 +88,9 @@ class GameService:
         
         # retrieving game
         game = self.get_game(game_id)
-        
         # starting game
         self.running_game = game
+        
         game.start()
 
     def execute_command(self, game_cmd: GameCommand):

@@ -52,9 +52,13 @@ export class GameService {
     if(this._currentGame != null) {
       let serviceArgs: any[] = [];
   
-      IGS.servicArgsAddString(serviceArgs, playerId);
-      IGS.servicArgsAddString(serviceArgs, this._currentGame.id);
+      IGS.serviceArgsAddString(serviceArgs, playerId);
+      IGS.serviceArgsAddString(serviceArgs, this._currentGame.id);
       IGS.serviceCall(agentGameBot.id, agentGameBot.services.ready, serviceArgs, "");
+      console.log(`Called service ${agentGameBot.services.ready} with arg ${serviceArgs}`);
+
+    } else {
+      console.log("Cannot ready, no game running");
     }
   }
 

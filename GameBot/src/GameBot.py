@@ -35,11 +35,13 @@ class GameBot(metaclass=Singleton):
         self._resultO = None
 
         self.game_service = GameService()
+        print(f"Initialized game service {self.game_service}")
 
     # inputs
     def on_command(self, command: str):
         dict_cmd = json.loads(command)
         game_cmd = GameCommand.from_dict(dict_cmd)
+        print(game_cmd)
         self.game_service.execute_command(game_cmd)
 
     # outputs
@@ -55,9 +57,10 @@ class GameBot(metaclass=Singleton):
 
     # services
     def ready(self, sender_agent_name, sender_agent_uuid, playerId, gameId):
-        self.gameService.ready(playerId, gameId)
+        print(f"GameBot calling gameService.ready({playerId}, {gameId})")
+        self.game_service.ready(playerId, gameId)
 
     def getGames(self, sender_agent_name, sender_agent_uuid):
         # TODO: Find a way to return game list on Ingescape
-        return self.gameService.get_games()
+        return self.game_service.get_games()
 

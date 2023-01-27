@@ -6,7 +6,8 @@ import { GamePageJustePrixComponent } from './components/game-pages/game-page-ju
 const routes: Routes = [
   {"path": "", component: GameCardCarouselComponent},
   {"path": "list", component: GamePageJustePrixComponent},
-  {"path": "games/0", component: GamePageJustePrixComponent} // TODO: change
+  {"path": "games/0", component: GamePageJustePrixComponent}, // TODO: change
+  {"path": "games/1", component: GamePageJustePrixComponent} // TODO: change
 ];
 
 @NgModule({

@@ -32,6 +32,7 @@ class Game:
         return game_dict
     
     def start(self) -> None:
+        print(f"Game {self.title} starting...")
         service_args = (f" {self.title} started !")
         igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["chat"], service_args, "")
 
