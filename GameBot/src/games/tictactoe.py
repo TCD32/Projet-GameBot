@@ -17,7 +17,7 @@ class GameTicTacToe(Game):
 
     def submit_proposition(self, value: int, x: int, y: int):
         self.grid[x][y] = value
-        service_args = ()
+        service_args = ( "cross" if value == 1 else "circle", x, y, 1, 1, "black", "black", 0)
         igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["addShape"], service_args, "")
         
 
