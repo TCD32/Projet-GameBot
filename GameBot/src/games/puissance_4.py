@@ -96,7 +96,7 @@ class GamePuissance4(Game):
         colonne = command.get("colonne", -1)
         if joueur == -1 or colonne == -1:
             raise Exception("Puissance_4 : missing value in command :", command)
-        pos = self.grille.ajouter(joueur, colonne)
+        position_nouvelle_tuile = self.grille.ajouter(joueur, colonne)
 
 
     def finished(self) -> bool:
