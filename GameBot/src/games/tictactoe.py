@@ -1,8 +1,11 @@
 
 from typing import List
+from env import *
 
 from models.game import Game
 from models.game_command import GameCommand
+
+import ingescape as igs
 
 
 class GameTicTacToe(Game):
@@ -14,11 +17,20 @@ class GameTicTacToe(Game):
 
     def submit_proposition(self, value: int, x: int, y: int):
         self.grid[x][y] = value
+        service_args = ()
+        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["addShape"], service_args, "")
         
 
     def start(self) -> None:
         super().start()
-        # Draw tictactoe shape
+        service_args = ("rectangle", 50, 20, 50, 3, "black", "black", 0)
+        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["addShape"], service_args, "")
+        service_args = ("rectangle", 50, 40, 50, 3, "black", "black", 0)
+        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["addShape"], service_args, "")
+        service_args = ("rectangle", 20, 50, 3, 50, "black", "black", 0)
+        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["addShape"], service_args, "")
+        service_args = ("rectangle", 40, 50, 3, 50, "black", "black", 0)
+        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["addShape"], service_args, "")
 
     def command(self, command: GameCommand) -> None:
         return self.submit_proposition(int(command.player), command.cmd["x"], command.cmd["y"])

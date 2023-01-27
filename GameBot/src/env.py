@@ -1,6 +1,7 @@
 AGENT_WHITEBOARD = {
     "id": "Whiteboard",
     "services": {
-        "chat": "chat"
+        "chat": "chat",
+        "addShape": "addShape"
     }
 }
