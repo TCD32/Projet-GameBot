@@ -2,6 +2,7 @@ from typing import Optional
 
 from games.juste_prix import GameJustePrix
 from games.tictactoe import GameTicTacToe
+from games.puissance_4 import GamePuissance4
 from models.game import Game
 from models.color import Color
 from models.game_state import GameState
@@ -29,6 +30,15 @@ class GameService:
                 description="Le jeu du Tic Tac Toe !",
                 image="https://wallpapercrafter.com/sizes/1920x1080/1146-gradient-color-faded-blue-4k.jpg",
                 color=Color(240, 152, 25, 1),
+                state=GameState()
+            ),
+            "2": GamePuissance4(
+                id="2",
+                title="Puissance 4",
+                players=2,
+                description="Le jeu du Puissance 4 ! Unlimited POOOOOOOWER !",
+                image="https://static.wikia.nocookie.net/chainsaw-man/images/7/7b/MakimaP.png/revision/latest?cb=20220213091438&path-prefix=fr",
+                color=Color(666, 666, 666, 666),
                 state=GameState()
             )
         }

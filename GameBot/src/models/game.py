@@ -27,14 +27,14 @@ class Game:
 
         return game_dict
     
-    def start() -> None:
+    def start(self) -> None:
         raise Exception("Game method start() is not implemented !")
 
-    def command(command: str) -> None:
+    def command(self, command: str) -> None:
         raise Exception("Game method command() is not implemented !")
     
-    def finished() -> bool:
+    def finished(self) -> bool:
         raise Exception("Game method finished() is not implemented !")
 
-    def reset() -> None:
+    def reset(self) -> None:
         raise Exception("Game method reset() is not implemented !")
