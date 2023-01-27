@@ -73,8 +73,8 @@ class GameService:
 
         # starting game if enough players are ready
         game_state = game.game_state
-        game_state.players_ready += 1
-        if game_state.players_ready == game_state.game.players:
+        game_state.players_ready[player_id] = not game_state.players_ready.get(player_id, False)
+        if len([e for e in game_state.players_ready.values() if e]) == game_state.game.players:
             game_state.game_running = True
             self.start_game(game)
 
