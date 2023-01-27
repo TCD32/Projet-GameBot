@@ -2,6 +2,7 @@
 import random
 
 from models.game import Game
+from models.game_command import GameCommand
 
 
 class GameJustePrix(Game):
@@ -25,8 +26,8 @@ class GameJustePrix(Game):
 
         return res
 
-    def command(self, command: str) -> None:
-        return self.submit_proposition(int(command))
+    def command(self, command: GameCommand) -> None:
+        return self.submit_proposition(int(command.cmd["value"]))
 
     def reset(self) -> None:
         self.value = random.randint(0, self.MAX_VALUE)

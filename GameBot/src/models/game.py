@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from models.color import Color
 from models.game_state import GameState
+from models.game_command import GameCommand
 
 import ingescape as igs
 
@@ -34,7 +35,7 @@ class Game:
         service_args = (f" {self.title} started !")
         igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["chat"], service_args, "")
 
-    def command(self, command: str) -> None:
+    def command(self, command: GameCommand) -> None:
         raise Exception("Game method command() is not implemented !")
     
     def finished(self) -> bool:

@@ -40,7 +40,7 @@ class GameBot(metaclass=Singleton):
     def on_command(self, command: str):
         dict_cmd = json.loads(command)
         game_cmd = GameCommand.from_dict(dict_cmd)
-        self.game_service.execute_command()
+        self.game_service.execute_command(game_cmd)
 
     # outputs
     @property
