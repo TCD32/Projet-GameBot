@@ -86,10 +86,13 @@ class Grille:
 
 class GamePuissance4(Game):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # TODO aficher grille et les tuiles
+
+    def __init__(self):
         self.grille = Grille()
 
+    def start(self):
+        super().start()
 
     # formats commandes : {"joueur":int (1 ou 2), "colonne":int (0 - 6)}
     def command(self, command: str) -> None:
