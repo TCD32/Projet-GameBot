@@ -8,12 +8,31 @@ export const environment = {
 
 export const agentWhiteboard = {
   id: "Whiteboard",
+  inputs: {},
+  outputs: {},
   services: {
     chat: "chat",
     clear: "clear",
     addText: "addText",
   }
 };
+
+export const agentGameBot = {
+  id: "GameBot",
+  inputs: {},
+  outputs: {},
+  services: {
+    ready: "ready"
+  }
+}
+
+export const agentGameBotClient = {
+  id: "GameBotClient",
+  inputs: {},
+  outputs: {
+    command: "command"
+  }
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

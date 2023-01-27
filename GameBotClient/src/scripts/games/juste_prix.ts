@@ -1,5 +1,3 @@
-declare const IGS:any;
-
 export class JustePrix {
 
     private value: number;

@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { agentGameBot, agentGameBotClient } from 'src/environments/environment';
 import { Game } from '../models/game';
+import { GameCommand } from '../models/game_command';
+
+declare const IGS: any;
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +41,20 @@ export class GameService {
     const index = this._gamesList.indexOf(game);
     if (index > -1) {
       this._gamesList.splice(index, 1);
+    }
+  }
+
+  public sendCommand(command: GameCommand) {
+    IGS.outputSetString(agentGameBotClient.outputs.command, JSON.stringify(command));
+  }
+
+  public ready(playerId: string) {
+    if(this._currentGame != null) {
+      let serviceArgs: any[] = [];
+  
+      IGS.servicArgsAddString(serviceArgs, playerId);
+      IGS.servicArgsAddString(serviceArgs, this._currentGame.id);
+      IGS.serviceCall(agentGameBot.id, agentGameBot.services.ready, serviceArgs, "");
     }
   }
 

@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { Color } from 'src/app/models/color';
 import { Game } from 'src/app/models/game';
 import { GameService } from 'src/app/services/game.service';
+import { agentGameBot, agentGameBotClient } from 'src/environments/environment';
+
+declare const IGS: any;
 
 @Component({
   selector: 'app-game-card',
@@ -58,7 +61,10 @@ export class GameCardComponent implements OnInit {
   }
 
   onPlayGame() {
+    let r = Math.floor(Math.random() * 10000);
     this.gameService.currentGame = this.game;
+    this.gameService.ready(`player-${r}`);
+
     this.router.navigateByUrl(`games/${this.game.id}`);
   }
 

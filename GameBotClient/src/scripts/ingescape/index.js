@@ -16,7 +16,7 @@ function isConnectedToServerChanged(isConnected)
         console.log("Not connected");
 }
 
-IGS.netSetServerURL("ws://localhost:5000");
+IGS.netSetServerURL("ws://172.23.240.1:5000");
 IGS.agentSetName("GameBotClient");
 IGS.observeWebSocketState(isConnectedToServerChanged);
 

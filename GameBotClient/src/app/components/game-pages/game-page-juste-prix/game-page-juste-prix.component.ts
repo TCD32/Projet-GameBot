@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Game } from 'src/app/models/game';
 import { GamePage } from 'src/app/models/game_page';
 import { GameService } from 'src/app/services/game.service';
-import { agentWhiteboard } from 'src/environments/environment';
+import { agentGameBotClient, agentWhiteboard } from 'src/environments/environment';
 import { JustePrix } from 'src/scripts/games/juste_prix';
 
 declare const IGS: any;
@@ -50,22 +50,24 @@ export class GamePageJustePrixComponent implements GamePage {
 
   onGameResult(result: String) {
     let message: String = `[${this.game!.title}] ${result}`;
-    let serviceArgs: any = [];
+    // let serviceArgs: any = [];
 
     // Clear whiteboard
-    IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.clear, serviceArgs, "");
+    // IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.clear, serviceArgs, "");
 
     // Sending message in chat
-    serviceArgs = [];
-    IGS.serviceArgsAddString(serviceArgs, message);
-    IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.chat, serviceArgs, "");
+    // serviceArgs = [];
+    // IGS.serviceArgsAddString(serviceArgs, message);
+    // IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.chat, serviceArgs, "");
 
     // Adding text to whiteboard
-    serviceArgs = [];
-    IGS.serviceArgsAddString(serviceArgs, result);
-    IGS.serviceArgsAddDouble(serviceArgs, 0);
-    IGS.serviceArgsAddDouble(serviceArgs, 0);
-    IGS.serviceArgsAddString(serviceArgs, "green");
-    IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.addText, serviceArgs, "");
+    // serviceArgs = [];
+    // IGS.serviceArgsAddString(serviceArgs, result);
+    // IGS.serviceArgsAddDouble(serviceArgs, 0);
+    // IGS.serviceArgsAddDouble(serviceArgs, 0);
+    // IGS.serviceArgsAddString(serviceArgs, "green");
+    // IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.addText, serviceArgs, "");
+
+    // IGS.outputSetString(agentGameBotClient.outputs.command, message)
   }
 }

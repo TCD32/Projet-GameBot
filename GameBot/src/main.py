@@ -19,7 +19,7 @@ from GameBot import *
 
 port = 5670
 agent_name = "GameBot"
-device = "Wi-Fi"
+device = "eth0"
 verbose = True
 is_interrupted = False
 
@@ -105,23 +105,24 @@ def command_input_callback(iop_type, name, value_type, value, my_data):
     agent_object = my_data
     assert isinstance(agent_object, GameBot)
     agent_object.commandI = value
-    agent_object.on_command(commandI)
+    agent_object.on_command(str(value))
     pass
-    # add code here if needed
 
 # services
 def ready_callback(sender_agent_name, sender_agent_uuid, service_name, tuple_args, token, my_data):
     agent_object = my_data
     assert isinstance(agent_object, GameBot)
-    playerId = tuple_args[0]
-    gameId = tuple_args[1]
-    agent_object.ready(sender_agent_name, sender_agent_uuid, playerId, gameId)
+    # playerId = tuple_args[0]
+    # gameId = tuple_args[1]
+    pass
+    # agent_object.ready(sender_agent_name, sender_agent_uuid, playerId, gameId)
 
 
 def getGames_callback(sender_agent_name, sender_agent_uuid, service_name, tuple_args, token, my_data):
     agent_object = my_data
     assert isinstance(agent_object, GameBot)
-    agent_object.getGames(sender_agent_name, sender_agent_uuid)
+    pass
+    # agent_object.getGames(sender_agent_name, sender_agent_uuid)
 
 
 if __name__ == "__main__":
