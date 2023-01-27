@@ -9,8 +9,10 @@
 # Chat bot to play some games on the whiteboard
 #
 import ingescape as igs
+import json
 
 from services.game_service import GameService
+from models.game_command import GameCommand
 
 
 class Singleton(type):
@@ -23,7 +25,7 @@ class Singleton(type):
 
 class GameBot(metaclass=Singleton):
 
-    gameService: GameService
+    game_service: GameService
 
     def __init__(self):
         print("GAMEBOT CREATED")
@@ -32,11 +34,13 @@ class GameBot(metaclass=Singleton):
         # outputs
         self._resultO = None
 
-        self.gameService = GameService()
+        self.game_service = GameService()
 
     # inputs
-    def on_command(command: str):
-        print(f"GameBot received command {command}")
+    def on_command(self, command: str):
+        dict_cmd = json.loads(command)
+        game_cmd = GameCommand.from_dict(dict_cmd)
+        self.game_service.execute_command()
 
     # outputs
     @property

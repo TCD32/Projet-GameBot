@@ -5,6 +5,7 @@ from games.tictactoe import GameTicTacToe
 from models.game import Game
 from models.color import Color
 from models.game_state import GameState
+from models.game_command import GameCommand
 
 
 class GameService:
@@ -81,7 +82,10 @@ class GameService:
         self.running_game = game
         game.start()
 
-    def execute_command(self, game_id: str, command: str):
+    def execute_command(self, game_cmd: GameCommand):
+        game_id = game_cmd.id
+        command = game_cmd.cmd
+        
         if self.running_game is None:
             raise Exception(
                 f"Cannot execute command {command} because "

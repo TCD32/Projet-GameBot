@@ -23,4 +23,10 @@ class GameJustePrix(Game):
         else:
             res = "C'est moins"
 
-        return res;
+        return res
+
+    def command(self, command: str) -> None:
+        return self.submit_proposition(int(command))
+
+    def reset(self) -> None:
+        self.value = random.randint(0, self.MAX_VALUE)

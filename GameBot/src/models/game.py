@@ -1,7 +1,10 @@
+from env import *
 from dataclasses import dataclass
 
 from models.color import Color
 from models.game_state import GameState
+
+import ingescape as igs
 
 
 @dataclass
@@ -27,14 +30,15 @@ class Game:
 
         return game_dict
     
-    def start() -> None:
-        raise Exception("Game method start() is not implemented !")
+    def start(self) -> None:
+        service_args = (f" {self.title} started !")
+        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["chat"], service_args, "")
 
-    def command(command: str) -> None:
+    def command(self, command: str) -> None:
         raise Exception("Game method command() is not implemented !")
     
-    def finished() -> bool:
-        raise Exception("Game method finished() is not implemented !")
+    def finished(self) -> bool:
+        return (self.state.player_winner != None and not self.state.game_running)
 
-    def reset() -> None:
+    def reset(self) -> None:
         raise Exception("Game method reset() is not implemented !")
