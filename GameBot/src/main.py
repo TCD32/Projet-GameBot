@@ -113,111 +113,111 @@ def command_input_callback(iop_type, name, value_type, value, my_data):
 def ready_callback(sender_agent_name, sender_agent_uuid, service_name, tuple_args, token, my_data):
     agent_object = my_data
     assert isinstance(agent_object, GameBot)
-    playerId = tuple_args[0]
+    playerJson = tuple_args[0]
     gameId = tuple_args[1]
-    print(f"GameBot received call for service ready: {playerId} {gameId}")
-    agent_object.ready(sender_agent_name, sender_agent_uuid, playerId, gameId)
+    agent_object.ready(sender_agent_name, sender_agent_uuid, playerJson, gameId)
 
 
 def getGames_callback(sender_agent_name, sender_agent_uuid, service_name, tuple_args, token, my_data):
     agent_object = my_data
     assert isinstance(agent_object, GameBot)
-    pass
-    # agent_object.getGames(sender_agent_name, sender_agent_uuid)
+    agent_object.getGames(sender_agent_name, sender_agent_uuid)
 
 
 if __name__ == "__main__":
-
-    # catch SIGINT handler before starting agent
-    signal.signal(signal.SIGINT, signal_handler)
-    interactive_loop = False
-
     try:
-        opts, args = getopt.getopt(sys.argv[1:], short_flag, long_flag)
-    except getopt.GetoptError as err:
-        igs.error(err)
-        sys.exit(2)
-    for o, a in opts:
-        if o == "-h" or o == "--help":
-            print_usage()
-            exit(0)
-        elif o == "-v" or o == "--verbose":
-            verbose = True
-        elif o == "-i" or o == "--interactive_loop":
-            interactive_loop = True
-        elif o == "-p" or o == "--port":
-            port = int(a)
-        elif o == "-d" or o == "--device":
-            device = a
-        elif o == "-n" or o == "--name":
-            agent_name = a
-        else:
-            assert False, "unhandled option"
+        # catch SIGINT handler before starting agent
+        signal.signal(signal.SIGINT, signal_handler)
+        interactive_loop = False
 
-    igs.agent_set_name(agent_name)
-    igs.definition_set_version("1.0")
-    igs.definition_set_description("""Chat bot to play some games on the whiteboard""")
-    igs.log_set_console(verbose)
-    igs.log_set_file(True, None)
-    igs.log_set_stream(verbose)
-    igs.set_command_line(sys.executable + " " + " ".join(sys.argv))
-
-    if device is None:
-        # we have no device to start with: try to find one
-        list_devices = igs.net_devices_list()
-        list_addresses = igs.net_addresses_list()
-        if len(list_devices) == 1:
-            device = list_devices[0].decode('utf-8')
-            igs.info("using %s as default network device (this is the only one available)" % str(device))
-        elif len(list_devices) == 2 and (list_addresses[0] == "127.0.0.1" or list_addresses[1] == "127.0.0.1"):
-            if list_addresses[0] == "127.0.0.1":
-                device = list_devices[1].decode('utf-8')
-            else:
-                device = list_devices[0].decode('utf-8')
-            print("using %s as de fault network device (this is the only one available that is not the loopback)" % str(device))
-        else:
-            if len(list_devices) == 0:
-                igs.error("No network device found: aborting.")
-            else:
-                igs.error("No network device passed as command line parameter and several are available.")
-                print("Please use one of these network devices:")
-                for device in list_devices:
-                    print("	", device)
+        try:
+            opts, args = getopt.getopt(sys.argv[1:], short_flag, long_flag)
+        except getopt.GetoptError as err:
+            igs.error(err)
+            sys.exit(2)
+        for o, a in opts:
+            if o == "-h" or o == "--help":
                 print_usage()
-            exit(1)
+                exit(0)
+            elif o == "-v" or o == "--verbose":
+                verbose = True
+            elif o == "-i" or o == "--interactive_loop":
+                interactive_loop = True
+            elif o == "-p" or o == "--port":
+                port = int(a)
+            elif o == "-d" or o == "--device":
+                device = a
+            elif o == "-n" or o == "--name":
+                agent_name = a
+            else:
+                assert False, "unhandled option"
 
-    agent = GameBot()
+        igs.agent_set_name(agent_name)
+        igs.definition_set_version("1.0")
+        igs.definition_set_description("""Chat bot to play some games on the whiteboard""")
+        igs.log_set_console(verbose)
+        igs.log_set_file(True, None)
+        igs.log_set_stream(verbose)
+        igs.set_command_line(sys.executable + " " + " ".join(sys.argv))
 
-    igs.observe_agent_events(on_agent_event_callback, agent)
-    igs.observe_freeze(on_freeze_callback, agent)
+        if device is None:
+            # we have no device to start with: try to find one
+            list_devices = igs.net_devices_list()
+            list_addresses = igs.net_addresses_list()
+            if len(list_devices) == 1:
+                device = list_devices[0].decode('utf-8')
+                igs.info("using %s as default network device (this is the only one available)" % str(device))
+            elif len(list_devices) == 2 and (list_addresses[0] == "127.0.0.1" or list_addresses[1] == "127.0.0.1"):
+                if list_addresses[0] == "127.0.0.1":
+                    device = list_devices[1].decode('utf-8')
+                else:
+                    device = list_devices[0].decode('utf-8')
+                print("using %s as de fault network device (this is the only one available that is not the loopback)" % str(device))
+            else:
+                if len(list_devices) == 0:
+                    igs.error("No network device found: aborting.")
+                else:
+                    igs.error("No network device passed as command line parameter and several are available.")
+                    print("Please use one of these network devices:")
+                    for device in list_devices:
+                        print("	", device)
+                    print_usage()
+                exit(1)
 
-    igs.input_create("command", igs.STRING_T, None)
+        agent = GameBot()
 
-    igs.output_create("result", igs.STRING_T, None)
+        igs.observe_agent_events(on_agent_event_callback, agent)
+        igs.observe_freeze(on_freeze_callback, agent)
 
-    igs.observe_input("command", command_input_callback, agent)
+        igs.input_create("command", igs.STRING_T, None)
 
-    igs.service_init("ready", ready_callback, agent)
-    igs.service_arg_add("ready", "playerId", igs.STRING_T)
-    igs.service_arg_add("ready", "gameId", igs.STRING_T)
-    igs.service_init("getGames", getGames_callback, agent)
+        igs.output_create("result", igs.STRING_T, None)
 
-    igs.start_with_device(device, port)
+        igs.observe_input("command", command_input_callback, agent)
 
-    # catch SIGINT handler after starting agent
-    signal.signal(signal.SIGINT, signal_handler)
+        igs.service_init("ready", ready_callback, agent)
+        igs.service_arg_add("ready", "playerJson", igs.STRING_T)
+        igs.service_arg_add("ready", "gameId", igs.STRING_T)
+        igs.service_init("getGames", getGames_callback, agent)
 
-    if interactive_loop:
-        print_usage_help()
-        while True:
-            command = input()
-            if command == "/quit":
-                break
-            elif command == "/help":
-                print_usage_help()
-    else:
-        while (not is_interrupted) and igs.is_started():
-            time.sleep(2)
+        igs.start_with_device(device, port)
 
-    if igs.is_started():
-        igs.stop()
+        # catch SIGINT handler after starting agent
+        signal.signal(signal.SIGINT, signal_handler)
+
+        if interactive_loop:
+            print_usage_help()
+            while True:
+                command = input()
+                if command == "/quit":
+                    break
+                elif command == "/help":
+                    print_usage_help()
+        else:
+            while (not is_interrupted) and igs.is_started():
+                time.sleep(2)
+
+        if igs.is_started():
+            igs.stop()
+    except Exception as e:
+        print(str(e))

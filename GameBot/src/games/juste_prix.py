@@ -1,12 +1,7 @@
-
 import random
 
 from models.game import Game
 from models.game_command import GameCommand
-
-from env import *
-
-import ingescape as igs
 
 class GameJustePrix(Game):
     MAX_VALUE = 1000
@@ -31,8 +26,7 @@ class GameJustePrix(Game):
 
     def command(self, command: GameCommand) -> None:
         msg = self.submit_proposition(int(command.cmd["value"]))
-        service_args = (msg) 
-        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["chat"], service_args, "")
+        self.whiteboard_service.chat(msg)
 
     def reset(self) -> None:
         self.value = random.randint(0, self.MAX_VALUE)

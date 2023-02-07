@@ -1,4 +1,4 @@
-<div id="carouselExampleIndicators" class="carousel slide" data-bs-pause="true">
+<div id="gameCarousel" class="carousel slide" data-bs-pause="true">
     <div class="carousel-inner">
         <div *ngFor="let game of games; let isFirst = first;">
             <div class="carousel-item" [ngClass]="{'active': isFirst}">
@@ -12,14 +12,14 @@
             </div>
         </div>
     </div>
-    <button class="carousel-control carousel-control-prev" data-bs-target="#carouselExampleIndicators"
+    <button class="carousel-control carousel-control-prev" data-bs-target="#gameCarousel"
         data-bs-slide="prev" [ngStyle]="{'color': games[current].color.toRGBA()}" (click)="onPrevious()">
         <span class="material-symbols-outlined carousel-control-arrow">
             keyboard_arrow_left
         </span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control carousel-control-next" data-bs-target="#carouselExampleIndicators"
+    <button class="carousel-control carousel-control-next" data-bs-target="#gameCarousel"
         data-bs-slide="next" [ngStyle]="{'color': games[current].color.toRGBA()}" (click)="onNext()">
         <span class="material-symbols-outlined carousel-control-arrow">
             keyboard_arrow_right
@@ -27,6 +27,3 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
-<button class="btn btn-primary" (click)="onTest()">
-    TEST
-</button>

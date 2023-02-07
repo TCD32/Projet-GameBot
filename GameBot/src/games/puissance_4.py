@@ -88,7 +88,8 @@ class GamePuissance4(Game):
 
     # TODO aficher grille et les tuiles
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.grille = Grille()
 
     def start(self):

@@ -18,6 +18,10 @@
     color: white;
 }
 
+.game-btn-ready {
+    background-color: yellowgreen!important;
+}
+
 .card-img-top {
     width: 100%;
     min-height: 80px;

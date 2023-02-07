@@ -22,7 +22,8 @@ export const agentGameBot = {
   inputs: {},
   outputs: {},
   services: {
-    ready: "ready"
+    ready: "ready",
+    getGames: "getGames",
   }
 }
 

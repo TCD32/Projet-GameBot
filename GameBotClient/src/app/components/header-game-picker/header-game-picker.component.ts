@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
+import { PlayerService } from 'src/app/services/player.service';
 
 declare const IGS: any;
 
@@ -7,19 +9,28 @@ declare const IGS: any;
   templateUrl: './header-game-picker.component.html',
   styleUrls: ['./header-game-picker.component.css']
 })
-export class HeaderGamePickerComponent implements OnInit {
+export class HeaderGamePickerComponent {
 
-  public state: String = "Déco";
+  hideOnRoutes: string[] = [
+    "/login"
+  ]
 
-  constructor() { }
+  @Input()
+  connected!: boolean;
+  hide: boolean;
 
-  ngOnInit(): void {
-    IGS.observeWebSocketState(this.isConnectedToServerChanged);
-  }
+  constructor(
+    public playerService: PlayerService,
+    public router: Router,
+  ) {
+    this.hide = false;
+    this.router.events.forEach((event) => {
+      if(event instanceof NavigationStart) {
+        this.hide = this.hideOnRoutes.includes(event.url);
 
-  isConnectedToServerChanged(isConnected: boolean) {
-    console.log(isConnected.toString());
-    this.state = isConnected ? "Connected" : "Disconnected";
+        console.log(`${this.hideOnRoutes} contains ${event.url} ? ${this.hide}`);
+      }
+    });
   }
 
 }

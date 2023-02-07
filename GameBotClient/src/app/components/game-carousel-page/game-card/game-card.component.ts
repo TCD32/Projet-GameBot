@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Color } from 'src/app/models/color';
 import { Game } from 'src/app/models/game';
 import { GameService } from 'src/app/services/game.service';
+import { PlayerService } from 'src/app/services/player.service';
 import { agentGameBot, agentGameBotClient } from 'src/environments/environment';
 
 declare const IGS: any;
@@ -16,20 +18,27 @@ export class GameCardComponent implements OnInit {
 
   @Input()
   game!: Game;
+  isReady: boolean;
 
   gradient: String;
   buttonStyle: {[klass: string]: any};
   buttonHoverStyle: {[klass: string]: any};
+  buttonReadyStyle: {[klass: string]: any};
+
 
   public hover: boolean;
 
   constructor(
-    private router: Router,
     private gameService: GameService,
+    private playerService: PlayerService,
+    private toastrService: ToastrService,
+    private router: Router,
   ) {
+    this.isReady = false;
     this.gradient = "";
     this.buttonStyle = {};
     this.buttonHoverStyle = {};
+    this.buttonReadyStyle = {};
     this.hover = false;
   }
 
@@ -58,14 +67,23 @@ export class GameCardComponent implements OnInit {
       "background": this.gradient,
       "box-shadow": `0 3px 12px 0px ${gameColorLight.toRGBA()}`,
     }
+    this.buttonReadyStyle = {
+      "background-color": "green",
+    }
   }
 
   onPlayGame() {
-    let r = Math.floor(Math.random() * 10000);
-    this.gameService.currentGame = this.game;
-    this.gameService.ready(`player-${r}`);
-
-    this.router.navigateByUrl(`games/${this.game.id}`);
+    if(this.playerService.player) {
+      if(this.gameService.ready(this.playerService.player, this.game)) {
+        this.isReady = !this.isReady;
+      } else {
+        this.isReady = false;
+        this.toastrService.error(`Vous êtes déjà en attente pour le jeu ${this.gameService.currentGame?.title}`);
+      }
+    } else {
+      this.toastrService.error("Il faut avoir un pseudo pour pouvoir jouer !");
+      this.router.navigateByUrl("login");
+    }
   }
 
 }

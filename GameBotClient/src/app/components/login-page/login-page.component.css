@@ -1,0 +1,43 @@
+.gamebot-welcome {
+    font-size: 35px;
+    color: black;
+}
+
+.gamebot-title {
+    font-size: 50px;
+}
+
+.gamebot-icon {
+    font-size: 75px;
+}
+
+.gamebot-subtitle {
+    font-size: 13px;
+}
+
+.gamebot-form-label {
+    font-size: 20px;
+}
+
+.gamebot-form-input {
+    background-color: #F7F7F7;
+    min-height: 50px;
+}
+
+.gamebot-form-btn {
+    color: white;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.form-invalid-input {
+    color: tomato;
+    border-color: tomato;
+}
+
+.form-invalid-message {
+    font-size: 13px;
+    color: tomato;
+}

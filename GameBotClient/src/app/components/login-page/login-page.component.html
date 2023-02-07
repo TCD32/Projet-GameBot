@@ -1,0 +1,56 @@
+<div class="container" style="height: 100%">
+    <div class="row align-items-center" style="height: 70%">
+        <div class="col text-center">
+            <div class="gamebot-message my-5" [ngStyle]="{'color': color}">
+                <div class="gamebot-welcome mb-3">
+                    Bienvenue !
+                </div>
+                <div class="gamebot-title">
+                    GameBot
+                </div>
+                <div class="gamebot-subtitle text-muted">
+                    pour Whiteboard
+                </div>
+                <div class="gamebot-icon material-symbols-outlined d-inline-block align-text-top">
+                    smart_toy
+                </div>
+            </div>
+            <div class="my-5">
+                <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                    <div class="mb-3">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-start">
+                                <label class="gamebot-form-label form-label">
+                                    Choisissez un nom d'utilisateur
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <input
+                                    type="text"
+                                    class="gamebot-form-input form-control"
+                                    placeholder="Nom d'utilisateur"
+                                    formControlName="nickname"
+                                    [ngClass]="{'form-invalid-input': submitted && fl['nickname'].errors}"
+                                    [ngStyle]="{'color': color}"
+                                >
+                            </div>
+                        </div>
+                        <div *ngIf="submitted && fl['nickname'].errors" class="form-invalid-message w-100 text-start">
+                            <div *ngIf="fl['nickname'].errors['maxlength']">Longueur maximale dépassée (32 cars.)</div>
+                            <div *ngIf="fl['nickname'].errors['minlength']">Longueur insuffisante (min. 6 cars.)</div>
+                            <div *ngIf="fl['nickname'].errors['required']">Nom d'utilisateur requis</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="gamebot-form-btn btn btn-lg" [ngStyle]="{'background-color': color}">
+                            VALIDER
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>

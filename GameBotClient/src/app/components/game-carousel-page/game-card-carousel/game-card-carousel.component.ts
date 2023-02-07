@@ -16,7 +16,7 @@ export class GameCardCarouselComponent {
 
   constructor(private gameService: GameService) {
     this.current = 0;
-    this.games = this.gameService.gamesList;
+    this.games = this.gameService.getGamesList();
   }
 
   onPrevious() {

@@ -1,11 +1,10 @@
-from env import *
 from dataclasses import dataclass
 
+
+from services.whiteboard_service import WhiteboardService
 from models.color import Color
 from models.game_state import GameState
 from models.game_command import GameCommand
-
-import ingescape as igs
 
 
 @dataclass
@@ -17,6 +16,8 @@ class Game:
     image: str
     color: Color
     state: GameState
+
+    whiteboard_service: WhiteboardService
 
     def to_dict(self):
         game_dict = {
@@ -32,9 +33,7 @@ class Game:
         return game_dict
     
     def start(self) -> None:
-        print(f"Game {self.title} starting...")
-        service_args = (f" {self.title} started !")
-        igs.service_call(AGENT_WHITEBOARD["id"], AGENT_WHITEBOARD["services"]["chat"], service_args, "")
+        self.state.game_running = True
 
     def command(self, command: GameCommand) -> None:
         raise Exception("Game method command() is not implemented !")
@@ -43,4 +42,4 @@ class Game:
         return (self.state.player_winner != None and not self.state.game_running)
 
     def reset(self) -> None:
-        raise Exception("Game method reset() is not implemented !")
+        self.state.game_running = False
