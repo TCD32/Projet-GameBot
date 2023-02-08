@@ -38,7 +38,7 @@ class Grille:
             raise Exception("Puissance_4 : Column ", colonne, "out of range")
         
         for ligne in range(Grille.row - 1, -1, -1):
-            if self.grille[colonne][ligne - 1] != CouleurCase.Vide:
+            if self.grille[colonne][ligne - 1] != CouleurCase.Vide or ligne == 0:
                 self.grille[colonne][ligne] = CouleurCase(joueur)
                 self.derniereCouleur = CouleurCase(joueur)
                 self.checkFini(colonne,ligne)
@@ -96,12 +96,12 @@ class GamePuissance4(Game):
         super().start()
 
     # formats commandes : {"joueur":int (1 ou 2), "colonne":int (0 - 6)}
-    def command(self, command: str) -> None:
+    def command(self, command) -> None:
         joueur = command.get("joueur", -1)
         colonne = command.get("colonne", -1)
         if joueur == -1 or colonne == -1:
             raise Exception("Puissance_4 : missing value in command :", command)
-        position_nouvelle_tuile = self.grille.ajouter(joueur, colonne)
+        self.grille.ajouter(joueur, colonne)
 
 
     def finished(self) -> bool:
