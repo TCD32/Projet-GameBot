@@ -1,6 +1,8 @@
 
-from models.game import Game
 from enum import Enum
+import numpy as np
+from PIL import Image as im
+
 
 class CouleurCase(Enum):
     Vide = 0
@@ -18,6 +20,10 @@ class Grille:
         self.finie = False
         # dernière couleur placée, used to check victory
         self.derniereCouleur = CouleurCase.Vide
+        # array pour générer image
+        self.array = np.zeros((720,1024,3), dtype=np.uint8)
+        self.array[0:720, 0:1024] = [0,0,255]
+        self.generate_image()
         #init grille
         self.grille = []
         for i in range(Grille.col):
@@ -32,16 +38,21 @@ class Grille:
     # ajout tuile colonne
     def ajouter(self, joueur: int, colonne: int) -> tuple:
         # check
+        if self.finie:
+            raise Exception("La partie est déjà finie")
         if CouleurCase(joueur) == self.derniereCouleur:
             raise Exception("Puissance_4 : Same player can't play twice in a row")
         if colonne not in range(Grille.col):
             raise Exception("Puissance_4 : Column ", colonne, "out of range")
+        if self.grille[colonne][Grille.row-1] != CouleurCase.Vide:
+            raise Exception("colonne déjà pleine")
         
         for ligne in range(Grille.row - 1, -1, -1):
             if self.grille[colonne][ligne - 1] != CouleurCase.Vide or ligne == 0:
                 self.grille[colonne][ligne] = CouleurCase(joueur)
                 self.derniereCouleur = CouleurCase(joueur)
-                self.checkFini(colonne,ligne)
+                self.checkFini(colonne, ligne)
+                self.colorer(colonne, ligne)
                 return (colonne, ligne)
 
 
@@ -70,6 +81,14 @@ class Grille:
         return self.finie
     
     def reset(self) -> None:
+        self.finie = False
+        # dernière couleur placée, used to check victory
+        self.derniereCouleur = CouleurCase.Vide
+        # array pour générer image
+        self.array = np.zeros((720,1024,3), dtype=np.uint8)
+        self.array[0:720, 0:1024] = [0,0,255]
+        self.generate_image()
+        #init grille
         for i in range(Grille.col):
             for j in range(Grille.row):
                 self.grille[i] = CouleurCase.Vide
@@ -83,8 +102,25 @@ class Grille:
                 if j==6:
                     print("||")
 
+    def colorer(self, colonne, ligne):
+        print( self.derniereCouleur)
+        if CouleurCase(1) == self.derniereCouleur:
+            couleur = [0,255,0]
+        else:
+            couleur = [255,0,0]
+        for j in range(146 * colonne + 20, 146 * colonne + 100):
+            for i in range(-120 * ligne -100, -120 * ligne - 20):
+                self.array[i, j] = couleur
+        self.generate_image()
 
-class GamePuissance4(Game):
+    # 
+    def generate_image(self):
+        data = im.fromarray(self.array, 'RGB')
+        data.save('grille_puissance_4.png')
+
+
+
+class GamePuissance4:
 
     # TODO aficher grille et les tuiles
 
@@ -109,5 +145,4 @@ class GamePuissance4(Game):
 
     def reset(self) -> None:
         self.grille.reset()
-
 
