@@ -23,6 +23,11 @@ class Grille:
         # array pour générer image
         self.array = np.zeros((720,1024,3), dtype=np.uint8)
         self.array[0:720, 0:1024] = [0,0,255]
+        for colonne in range(Grille.col):
+            for ligne in range(Grille.row):
+                for j in range(146 * colonne + 20, 146 * colonne + 100):
+                    for i in range(-120 * ligne -100, -120 * ligne - 20):
+                        self.array[i, j] = [255, 255, 255]
         self.generate_image()
         #init grille
         self.grille = []
@@ -87,6 +92,11 @@ class Grille:
         # array pour générer image
         self.array = np.zeros((720,1024,3), dtype=np.uint8)
         self.array[0:720, 0:1024] = [0,0,255]
+        for colonne in range(Grille.col):
+            for ligne in range(Grille.row):
+                for j in range(146 * colonne + 20, 146 * colonne + 100):
+                    for i in range(-120 * ligne -100, -120 * ligne - 20):
+                        self.array[i, j] = [255, 255, 255]
         self.generate_image()
         #init grille
         for i in range(Grille.col):
@@ -113,11 +123,10 @@ class Grille:
                 self.array[i, j] = couleur
         self.generate_image()
 
-    # 
+    # appelé tout seul quand changement
     def generate_image(self):
         data = im.fromarray(self.array, 'RGB')
-        data.save('grille_puissance_4.png')
-
+        data.save('gfg_dummy_pic.png')
 
 
 class GamePuissance4:
