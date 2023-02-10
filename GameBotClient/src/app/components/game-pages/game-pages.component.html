@@ -1,0 +1,17 @@
+<div class="container">
+    <ng-container *ngIf="gameId">
+        <ng-container [ngSwitch]="gameId">
+            <app-game-page-juste-prix *ngSwitchCase="'0'"></app-game-page-juste-prix>
+            <app-game-page-puissance-quatre *ngSwitchCase="'1'"></app-game-page-puissance-quatre>
+            <ng-container *ngSwitchDefault>
+                <div class="row">
+                    <div class="col text-center">
+                        <h2 class="text-muted">
+                            Jeu inconnu...
+                        </h2>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</div>

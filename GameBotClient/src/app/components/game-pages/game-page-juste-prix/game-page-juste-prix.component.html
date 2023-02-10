@@ -8,8 +8,22 @@
                     Proposition
                 </h4>
             </div>
-            <input class="form-control" formControlName="proposition">
-            <button type="submit" class="btn btn-primary">
+            <input
+                class="form-control"
+                formControlName="proposition" 
+                [ngClass]="{'form-invalid-input': pf['proposition'].errors}"
+            >
+            <div *ngIf="pf['proposition'].errors" class="form-invalid-message w-100 text-start">
+                <div *ngIf="pf['proposition'].errors['maxlength']">Longueur maximale dépassée (4 cars.)</div>
+                <div *ngIf="pf['proposition'].errors['pattern']">Veuillez entrer seulement des nombres !</div>
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                (submit)="onSubmitProposition()"
+                [disabled]="buttonDisabled"
+            >
                 <span>VALIDER</span>
             </button>
         </form>    

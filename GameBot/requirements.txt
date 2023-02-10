@@ -1,1 +1,3 @@
-ingescape >= 3.0.1
+ingescape==3.0.4
+numpy==1.24.2
+Pillow==9.4.0

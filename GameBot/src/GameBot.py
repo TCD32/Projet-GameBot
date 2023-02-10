@@ -37,7 +37,7 @@ class GameBot(metaclass=Singleton):
         # inputs
         self.commandI = None
         # outputs
-        self._resultO = None
+        self._game_titleO = None
 
         self.logger_service = LoggerService("gamebot_logger")
         self.whiteboard_service = WhiteboardService()
@@ -57,14 +57,14 @@ class GameBot(metaclass=Singleton):
 
     # outputs
     @property
-    def resultO(self):
-        return self._resultO
+    def game_titleO(self):
+        return self._game_titleO
 
-    @resultO.setter
-    def resultO(self, value):
-        self._resultO = value
-        if self._resultO is not None:
-            igs.output_set_string("result", self._resultO)
+    @game_titleO.setter
+    def game_titleO(self, value):
+        self._game_titleO = value
+        if self._game_titleO is not None:
+            igs.output_set_string("game_title", self._game_titleO)
 
     # services
     def ready(self, sender_agent_name, sender_agent_uuid, playerJson, gameId):
@@ -72,10 +72,3 @@ class GameBot(metaclass=Singleton):
 
         player = Player.from_dict(json.loads(playerJson))
         self.game_service.ready(player, gameId)
-
-    def getGames(self, sender_agent_name, sender_agent_uuid):
-        # TODO: Find a way to return game list on Ingescape
-        self.logger_service.info(f"Service getGames() called by {sender_agent_name}")
-
-        return [game.to_dict() for game in self.game_service.get_games()]
-

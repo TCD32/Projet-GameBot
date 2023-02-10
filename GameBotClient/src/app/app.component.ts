@@ -35,11 +35,11 @@ export class AppComponent {
       },
       {
         "id": "1",
-        "title": "Tic Tac Toe",
+        "title": "Puissance 4",
         "players": 2,
-        "description": "Le jeu du Tic Tac Toe !",
-        "image": "https://wallpapercrafter.com/sizes/1920x1080/1146-gradient-color-faded-blue-4k.jpg",
-        "color": new Color(240, 152, 25, 1),
+        "description": "Le jeu du Puissance 4 !",
+        "image": "https://susancall.com/wp-content/uploads/2014/04/games-1043006_1920-1080x675.jpg",
+        "color": new Color(37, 130, 230, 1),
       }
     ]);
 
@@ -54,6 +54,10 @@ export class AppComponent {
     IGS.serviceInit("displayGame", this.displayGameServiceCallback.bind(this));
     IGS.serviceArgAdd("displayGame", "playerId", iopTypes.IGS_STRING_T);
     IGS.serviceArgAdd("displayGame", "gameId", iopTypes.IGS_STRING_T);
+
+    IGS.serviceInit("displayHome", this.displayHomeServiceCallback.bind(this));
+    IGS.serviceArgAdd("displayHome", "playerId", iopTypes.IGS_STRING_T);
+    IGS.serviceArgAdd("displayHome", "message", iopTypes.IGS_STRING_T);
 
     // outputs
     IGS.outputCreate("command", iopTypes.IGS_STRING_T, "");
@@ -73,7 +77,6 @@ export class AppComponent {
     var playerIdValue = serviceArguments[0].value;
     var gameIdValue = serviceArguments[1].value;
     
-    console.log(this.playerService);
     if(this.playerService.player != null && playerIdValue == this.playerService.player.id) {
       var log = senderAgentName + " called service " + serviceName;
       console.log(log);
@@ -81,6 +84,26 @@ export class AppComponent {
       this.gameService.currentGame = this.gameService.getGame(gameIdValue);
       this.toastrService.success(`La partie de ${this.gameService.currentGame.title} commence !`);
       this.router.navigateByUrl(`games/${gameIdValue}`);
+    }
+  }
+
+  displayHomeServiceCallback(
+    senderAgentName: string,
+    senderAgentUUID: string,
+    serviceName: string,
+    serviceArguments: any[],
+    token: string,
+    myData: any
+  ) {
+    var playerIdValue = serviceArguments[0].value;
+    var messageValue = serviceArguments[1].value;
+    
+    if(this.playerService.player != null && playerIdValue == this.playerService.player.id) {
+      var log = senderAgentName + " called service " + serviceName;
+      console.log(log);
+
+      this.toastrService.info(messageValue);
+      this.router.navigateByUrl(`games`);
     }
   }
 

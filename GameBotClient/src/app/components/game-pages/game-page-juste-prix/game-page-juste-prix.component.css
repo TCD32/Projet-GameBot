@@ -1,0 +1,9 @@
+.form-invalid-input {
+    color: tomato;
+    border-color: tomato;
+}
+
+.form-invalid-message {
+    font-size: 13px;
+    color: tomato;
+}

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { agentGameBot, agentGameBotClient } from 'src/environments/environment';
 import { Game } from '../models/game';
-import { GameCommand } from '../models/game_command';
 import { Player } from '../models/player';
-
-declare const IGS: any;
+import { GameBotService } from './gamebot.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +10,12 @@ export class GameService {
   private _gamesList: {[id: string]: Game};
   private _currentGame: Game | null;
 
-  constructor() {
+  private _playerReady: boolean;
+
+  constructor(private gameBotService: GameBotService) {
     this._gamesList = {};
     this._currentGame = null;
+    this._playerReady = false;
   }
 
   public get currentGame() {
@@ -26,6 +26,14 @@ export class GameService {
     this._currentGame = game;
   }
   
+  public get playerReady() {
+    return this._playerReady;
+  }
+
+  public set playerReady(value: boolean) {
+    this._playerReady = value;
+  }
+
   public getGamesList() {
     return Object.values(this._gamesList);
   }
@@ -37,38 +45,34 @@ export class GameService {
     }
   }
 
-  public sendCommand(command: GameCommand) {
-    IGS.outputSetString(agentGameBotClient.outputs.command, JSON.stringify(command));
-  }
-
   public getGame(gameId: string) {
     return this._gamesList[gameId];
   }
 
-  public getGames() {
-    let serviceArgs: any[] = [];
-
-    let games: Game[];
-    games = IGS.serviceCall(agentGameBot.id, agentGameBot.services.getGames, serviceArgs, "");
-    console.log(`Called service ${agentGameBot.services.getGames} with arg ${serviceArgs}`);
-
-    return games;
-  }
-
   public ready(player: Player, game: Game) {
-    if(this._currentGame == null || this._currentGame.id === game.id) {
-      this._currentGame = game;
-      let serviceArgs: any[] = [];
-  
-      IGS.serviceArgsAddString(serviceArgs, JSON.stringify(player));
-      IGS.serviceArgsAddString(serviceArgs, this._currentGame.id);
-      IGS.serviceCall(agentGameBot.id, agentGameBot.services.ready, serviceArgs, "");
-      console.log(`Called service ${agentGameBot.services.ready} with arg ${serviceArgs}`);
-      return true;
-    } else {
-      console.log(`Cannot call service ${agentGameBot.services.ready} because player is already ready`);
-      return false;
+    if(this.currentGame === null) { // Never set ready before
+      this.currentGame = game;
+      this.gameBotService.ready(player, this.currentGame.id);
+      this.playerReady = true;
+    } else if(game.id === this.currentGame.id) { // Ready on current selected game
+      if(this.playerReady) { // Un-ready
+        this.gameBotService.ready(player, this.currentGame.id);
+        this.playerReady = false;
+      } else { // Ready
+        this.gameBotService.ready(player, this.currentGame.id);
+        this.playerReady = true;
+      }
+    } else { // Ready on another game
+      if(this.playerReady) {
+        throw new Error("User tried to ready on a game but it is already waiting for another");
+      } else {
+        this.currentGame = game;
+        this.gameBotService.ready(player, this.currentGame.id);
+        this.playerReady = true;
+      }
     }
+
+    return this.playerReady;
   }
 
 }

@@ -5,9 +5,7 @@ import { Color } from 'src/app/models/color';
 import { Game } from 'src/app/models/game';
 import { GameService } from 'src/app/services/game.service';
 import { PlayerService } from 'src/app/services/player.service';
-import { agentGameBot, agentGameBotClient } from 'src/environments/environment';
 
-declare const IGS: any;
 
 @Component({
   selector: 'app-game-card',
@@ -24,7 +22,6 @@ export class GameCardComponent implements OnInit {
   buttonStyle: {[klass: string]: any};
   buttonHoverStyle: {[klass: string]: any};
   buttonReadyStyle: {[klass: string]: any};
-
 
   public hover: boolean;
 
@@ -74,11 +71,10 @@ export class GameCardComponent implements OnInit {
 
   onPlayGame() {
     if(this.playerService.player) {
-      if(this.gameService.ready(this.playerService.player, this.game)) {
-        this.isReady = !this.isReady;
-      } else {
-        this.isReady = false;
-        this.toastrService.error(`Vous êtes déjà en attente pour le jeu ${this.gameService.currentGame?.title}`);
+      try {
+        this.isReady = this.gameService.ready(this.playerService.player, this.game);
+      } catch (error) {
+        this.toastrService.error(`Vous êtes déjà en attente pour ${this.gameService.currentGame?.title}`);
       }
     } else {
       this.toastrService.error("Il faut avoir un pseudo pour pouvoir jouer !");

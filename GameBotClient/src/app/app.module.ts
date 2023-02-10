@@ -13,6 +13,8 @@ import { LoginPageComponent } from './components/login-page/login-page.component
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GameCarouselPageComponent } from './components/game-carousel-page/game-carousel-page.component';
+import { GamePagePuissanceQuatreComponent } from './components/game-pages/game-page-puissance-quatre/game-page-puissance-quatre.component';
+import { GamePagesComponent } from './components/game-pages/game-pages.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { GameCarouselPageComponent } from './components/game-carousel-page/game-
     GameCardCarouselComponent,
     GameListPageComponent,
     LoginPageComponent,
-    GameCarouselPageComponent
+    GameCarouselPageComponent,
+    GamePagePuissanceQuatreComponent,
+    GamePagesComponent
   ],
   imports: [
     BrowserModule,

@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 @dataclass
 class GameCommand :
-    id: str
-    cmd: dict
-    player: str
+    game_id: str
+    command: dict
+    player_id: str
 
     @staticmethod
     def from_dict(d: dict) :

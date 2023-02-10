@@ -105,7 +105,6 @@ def command_input_callback(iop_type, name, value_type, value, my_data):
     agent_object = my_data
     assert isinstance(agent_object, GameBot)
     agent_object.commandI = value
-    print(f"GameBot received {value} from command input")
     agent_object.on_command(str(value))
     pass
 
@@ -116,12 +115,6 @@ def ready_callback(sender_agent_name, sender_agent_uuid, service_name, tuple_arg
     playerJson = tuple_args[0]
     gameId = tuple_args[1]
     agent_object.ready(sender_agent_name, sender_agent_uuid, playerJson, gameId)
-
-
-def getGames_callback(sender_agent_name, sender_agent_uuid, service_name, tuple_args, token, my_data):
-    agent_object = my_data
-    assert isinstance(agent_object, GameBot)
-    agent_object.getGames(sender_agent_name, sender_agent_uuid)
 
 
 if __name__ == "__main__":
@@ -191,14 +184,13 @@ if __name__ == "__main__":
 
         igs.input_create("command", igs.STRING_T, None)
 
-        igs.output_create("result", igs.STRING_T, None)
+        igs.output_create("game_title", igs.STRING_T, None)
 
         igs.observe_input("command", command_input_callback, agent)
 
         igs.service_init("ready", ready_callback, agent)
         igs.service_arg_add("ready", "playerJson", igs.STRING_T)
         igs.service_arg_add("ready", "gameId", igs.STRING_T)
-        igs.service_init("getGames", getGames_callback, agent)
 
         igs.start_with_device(device, port)
 

@@ -1,8 +1,13 @@
 
-from enum import Enum
+import base64
 import numpy as np
+
+from io import BytesIO
+from enum import Enum
 from PIL import Image as im
 
+from services.whiteboard_service import WhiteboardService
+from models.game import Game
 
 class CouleurCase(Enum):
     Vide = 0
@@ -15,7 +20,8 @@ class Grille:
     row = 6
 
     # on init la grille avec des cases vides
-    def __init__(self) -> None:
+    def __init__(self, whiteboard_service: WhiteboardService):
+        self.whiteboard_service = whiteboard_service
         #param jeu fini
         self.finie = False
         # dernière couleur placée, used to check victory
@@ -72,7 +78,6 @@ class Grille:
         if alignementVert >= 3 or alignementHoriz >= 3 or alignementDiagX >= 3 or alignementDiag_X >= 3:
              self.finie = True
 
-
     # dligne = dx et dcolonne = dy
     def parcourir(self, dcolonne:int, dligne:int, colonne:int, ligne:int) -> int:
         # check still in grid
@@ -125,33 +130,52 @@ class Grille:
 
     # appelé tout seul quand changement
     def generate_image(self):
-        data = im.fromarray(self.array, 'RGB')
-        data.save('gfg_dummy_pic.png')
+        image_file = BytesIO()
+        image = im.fromarray(self.array, 'RGB')
+        image.save(image_file, format="PNG")
+        image_data = image_file.getvalue()
+        image_b64 = base64.b64encode(image_data).decode("utf-8")
+
+        self.whiteboard_service.add_image(image_b64, 225.0, 50.0, 450.0, 350.0)
 
 
-class GamePuissance4:
-
-    # TODO aficher grille et les tuiles
+class GamePuissance4(Game):
+    grille: Grille
+    players_number: dict
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.grille = Grille()
 
     def start(self):
         super().start()
+        self.grille = Grille(self.whiteboard_service)
+        players_ids = list(self.state.players.keys())
+        self.players_number = {
+            players_ids[0]: 1,
+            players_ids[1]: 2,
+        }
 
-    # formats commandes : {"joueur":int (1 ou 2), "colonne":int (0 - 6)}
-    def command(self, command) -> None:
-        joueur = command.get("joueur", -1)
-        colonne = command.get("colonne", -1)
+    # formats commandes : {"colonne":int (0 - 6)}
+    def command(self, command):
+        joueur = self.players_number.get(command.player_id, -1)
+        colonne = command.command.get("colonne", -1)
         if joueur == -1 or colonne == -1:
             raise Exception("Puissance_4 : missing value in command :", command)
         self.grille.ajouter(joueur, colonne)
 
+    def finished(self):
+        if self.grille.isFinished():
+            if self.grille.derniereCouleur.value == 1:
+                self.state.player_winner = self.state.players[0]
+            else:
+                self.state.player_winner = self.state.players[1]
+                
+            self.state.game_running = False
 
-    def finished(self) -> bool:
-        self.grille.isFinished()
+            return super().finished()
+        return False
 
-    def reset(self) -> None:
+    def reset(self):
+        super().reset()
         self.grille.reset()
 

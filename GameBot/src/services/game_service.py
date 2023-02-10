@@ -1,10 +1,10 @@
-from typing import Optional
+import ingescape as igs
 
+from typing import Optional
 
 from services.whiteboard_service import WhiteboardService
 from services.gamebotclient_service import GameBotClientService
 from games.juste_prix import GameJustePrix
-from games.tictactoe import GameTicTacToe
 from games.puissance_4 import GamePuissance4
 from models.game import Game
 from models.color import Color
@@ -36,26 +36,16 @@ class GameService:
                 state=GameState(),
                 whiteboard_service=whiteboard_service,
             ),
-            "1": GameTicTacToe(
+            "1": GamePuissance4(
                 id="1",
-                title="Tic Tac Toe",
-                players=2,
-                description="Le jeu du Tic Tac Toe !",
-                image="https://wallpapercrafter.com/sizes/1920x1080/1146-gradient-color-faded-blue-4k.jpg",
-                color=Color(240, 152, 25, 1),
-                state=GameState(),
-                whiteboard_service=whiteboard_service,
-            ),
-            "2": GamePuissance4(
-                id="2",
                 title="Puissance 4",
                 players=2,
                 description="Le jeu du Puissance 4 ! Unlimited POOOOOOOWER !",
-                image="https://static.wikia.nocookie.net/chainsaw-man/images/7/7b/MakimaP.png/revision/latest?cb=20220213091438&path-prefix=fr",
-                color=Color(666, 666, 666, 666),
+                image="https://susancall.com/wp-content/uploads/2014/04/games-1043006_1920-1080x675.jpg",
+                color=Color(37, 150, 200, 1),
                 state=GameState(),
                 whiteboard_service=whiteboard_service,
-            )
+            ),
         }
         self.running_game = None
         self.whiteboard_service = whiteboard_service
@@ -91,10 +81,10 @@ class GameService:
         message = ""
         if not game.state.players.get(player.id, None):
             game.state.players[player.id] = player
-            message = f"{player.nickname} est prêt pour {game.title} ! ({len(game.state.players)}/{game.players})"
+            message = f"✔️ {player.nickname} est prêt pour {game.title} ! ({len(game.state.players)}/{game.players})"
         else:
             game.state.players.pop(player.id)
-            message = f"{player.nickname} n'est plus prêt pour {game.title} ! ({len(game.state.players)}/{game.players})"
+            message = f"❌ {player.nickname} n'est plus prêt pour {game.title} ! ({len(game.state.players)}/{game.players})"
         
         # sending chat to Whiteboard
         self.whiteboard_service.chat(message)
@@ -126,37 +116,52 @@ class GameService:
         self.whiteboard_service.clear()
 
         # send chat to Whiteboard
-        self.whiteboard_service.chat(f"Le jeu {game.title} commence !")
-        self.whiteboard_service.chat(f"Joueurs: {', '.join([p.nickname for p in game.state.players.values()])}")
+        self.whiteboard_service.send_game_title(game.title)
+        self.whiteboard_service.chat(f"🎲 Le jeu {game.title} commence 🎲")
+        self.whiteboard_service.chat(f"👥 Joueurs: {', '.join([p.nickname for p in game.state.players.values()])}")
 
     def execute_command(self, game_cmd: GameCommand):
-        game_id = game_cmd.id
-        command = game_cmd.cmd
+        game_id = game_cmd.game_id
         
         if self.running_game is None:
             raise Exception(
-                f"Cannot execute command {command} because "
+                f"Cannot execute command {game_cmd} because "
                 f"no game is currently running."
             )
         
         if self.running_game.id != game_id:
             raise Exception(
-                f"Cannot execute command {command} for game {game_id} because "
-                f"game {self.running_game.id} is already running."
+                f"Cannot execute command {game_cmd} because "
+                f"game {self.running_game.title} is already running."
             )
         
         # execute game command
-        self.running_game.command(command)
+        self.running_game.command(game_cmd)
 
         # check game termination
         if self.running_game.finished():
-            self._end_running_game()
+            self.end_running_game()
 
-    # utils
-    def _end_running_game(self):
+    def end_running_game(self):
+        winner = self.running_game.state.player_winner
+
+        # send chats to whiteboard
+        self.whiteboard_service.chat(f"🏁 {self.running_game.title} est terminé 🏁")
+        self.whiteboard_service.chat(f"🏆 {winner.nickname} est le grand gagnant ! Bravo 🥳")
+
+        # tells game bot clients to display correct UI
+        for player_id in list(self.running_game.state.players.keys()):
+            message = "😕 Dommage, vous avez perdu... Retentez votre chance une autre fois !"
+            if player_id == winner.id:
+                message = "🥳 Bien joué, vous avez gagné !"
+            self.gamebotclient_service.display_home(player_id, message)
+
+        # reset state
+        self.whiteboard_service.send_game_title("Whiteboard")
         self.running_game.reset()
         self.running_game = None
 
+    # utils
     def _is_game_running(self):
         return any([game_state.game_running for game_state in self.games_states])
 

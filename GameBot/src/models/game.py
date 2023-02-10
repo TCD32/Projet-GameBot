@@ -42,4 +42,4 @@ class Game:
         return (self.state.player_winner != None and not self.state.game_running)
 
     def reset(self) -> None:
-        self.state.game_running = False
+        self.state = GameState()

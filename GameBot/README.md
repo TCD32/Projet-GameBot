@@ -5,7 +5,7 @@
 
 ## Install dependencies
 ```bash
-python3 -m pip install ingescape
+pip install -r requirements.txt
 ```
 
 ## Run

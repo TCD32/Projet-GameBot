@@ -1,36 +1,40 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Game } from 'src/app/models/game';
-import { GamePage } from 'src/app/models/game_page';
+import { GameCommand } from 'src/app/models/game_command';
+import { Player } from 'src/app/models/player';
 import { GameService } from 'src/app/services/game.service';
-import { agentGameBotClient, agentWhiteboard } from 'src/environments/environment';
-import { JustePrix } from 'src/scripts/games/juste_prix';
+import { GameBotService } from 'src/app/services/gamebot.service';
+import { PlayerService } from 'src/app/services/player.service';
 
-declare const IGS: any;
 
 @Component({
   selector: 'app-game-page-juste-prix',
   templateUrl: './game-page-juste-prix.component.html',
   styleUrls: ['./game-page-juste-prix.component.css']
 })
-export class GamePageJustePrixComponent implements GamePage {
+export class GamePageJustePrixComponent {
   game: Game | null;
+  player: Player| null;
 
+  buttonDisabled: boolean;
   propositionForm: FormGroup;
-  gameLogic: JustePrix;
 
   constructor(
     private formBuilder: FormBuilder,
     private gameService: GameService,
+    private playerService: PlayerService,
+    private gameBotService: GameBotService
   ) {
     this.propositionForm = this.formBuilder.group({
       proposition: [
         '',
-        [Validators.required, Validators.maxLength(64)],
+        [Validators.maxLength(4), Validators.pattern("[0-9]+")],
       ],
     });
-    this.gameLogic = new JustePrix();
+    this.buttonDisabled = false;
     this.game = this.gameService.currentGame;
+    this.player = this.playerService.player;
   }
 
   get pf() {
@@ -38,36 +42,18 @@ export class GamePageJustePrixComponent implements GamePage {
   }
 
   onSubmitProposition() {
-    let value: number = +this.pf["proposition"].value;
-    let result: String = this.gameLogic.try(value);
+    const proposition = +this.pf['proposition'].value;
+    
+    let command: GameCommand = {
+      gameId: this.game!.id,
+      playerId: this.player!.id,
+      command: {
+        "value": proposition,
+      },
+    }
 
-    this.onGameResult(result);
-  }
-
-  onGameStart() {
-    // TODO
-  }
-
-  onGameResult(result: String) {
-    let message: String = `[${this.game!.title}] ${result}`;
-    // let serviceArgs: any = [];
-
-    // Clear whiteboard
-    // IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.clear, serviceArgs, "");
-
-    // Sending message in chat
-    // serviceArgs = [];
-    // IGS.serviceArgsAddString(serviceArgs, message);
-    // IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.chat, serviceArgs, "");
-
-    // Adding text to whiteboard
-    // serviceArgs = [];
-    // IGS.serviceArgsAddString(serviceArgs, result);
-    // IGS.serviceArgsAddDouble(serviceArgs, 0);
-    // IGS.serviceArgsAddDouble(serviceArgs, 0);
-    // IGS.serviceArgsAddString(serviceArgs, "green");
-    // IGS.serviceCall(agentWhiteboard.id, agentWhiteboard.services.addText, serviceArgs, "");
-
-    // IGS.outputSetString(agentGameBotClient.outputs.command, message)
+    this.gameBotService.sendCommand(command);
+    this.buttonDisabled = true;
+    setTimeout(() => {this.buttonDisabled = false;}, 1000);
   }
 }
