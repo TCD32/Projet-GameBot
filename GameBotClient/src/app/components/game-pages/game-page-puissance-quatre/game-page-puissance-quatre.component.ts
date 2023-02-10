@@ -17,6 +17,11 @@ export class GamePagePuissanceQuatreComponent {
   player: Player | null;
 
   columns: number[];
+  selectedColumn: number | null;
+
+  columnStyle: {[klass: string]: any};
+  columnHoverStyle: {[klass: string]: any};
+
 
   constructor(
     private gameService: GameService,
@@ -24,11 +29,29 @@ export class GamePagePuissanceQuatreComponent {
     private gameBotService: GameBotService
   ) {
     this.columns = [0,1,2,3,4,5,6];
+    this.selectedColumn = null;
     this.game = this.gameService.currentGame;
     this.player = this.playerService.player;
+
+    this.columnStyle = {
+      "border-left": "lightgray solid 2px",
+      "border-right": "lightgray solid 2px",
+      "text-decoration": "none",
+      "color": "black",
+    };
+    
+    this.columnHoverStyle = {
+      "border-left": "lightgray solid 2px",
+      "border-right": "lightgray solid 2px",
+      "background-color": this.player?.color ?? "lightblue",
+      "cursor": "pointer",
+      "text-decoration": "none",
+      "color": "black",
+    }
   }
 
   onColumnClick(col: number) {
+    this.selectedColumn = col;
     let command: GameCommand = {
       gameId: this.game!.id,
       playerId: this.player!.id,
@@ -40,4 +63,11 @@ export class GamePagePuissanceQuatreComponent {
     this.gameBotService.sendCommand(command);
   }
 
+  highlightColumn(index: number) {
+    this.selectedColumn = index;
+  }
+
+  resetHighlight() {
+    this.selectedColumn = null;
+  }
 }

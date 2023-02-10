@@ -1,31 +1,44 @@
 <div class="container">
-    <div class="row">
+    <div class="row mb-5">
+        <div class="col text-center">
+            <h2>Juste Prix</h2>
+        </div>
     </div>
-    <div class="row">
-        <form [formGroup]="propositionForm" (ngSubmit)="onSubmitProposition()">
-            <div class="text-center">
-                <h4>
-                    Proposition
-                </h4>
-            </div>
-            <input
-                class="form-control"
-                formControlName="proposition" 
-                [ngClass]="{'form-invalid-input': pf['proposition'].errors}"
-            >
-            <div *ngIf="pf['proposition'].errors" class="form-invalid-message w-100 text-start">
-                <div *ngIf="pf['proposition'].errors['maxlength']">Longueur maximale dépassée (4 cars.)</div>
-                <div *ngIf="pf['proposition'].errors['pattern']">Veuillez entrer seulement des nombres !</div>
-            </div>
 
-            <button
-                type="submit"
-                class="btn btn-primary"
-                (submit)="onSubmitProposition()"
-                [disabled]="buttonDisabled"
-            >
-                <span>VALIDER</span>
-            </button>
-        </form>    
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col">
+            <form [formGroup]="propositionForm" (ngSubmit)="onSubmitProposition()">
+                <div class="row mb-3">
+                    <div class="col">
+                        <input
+                            class="form-control"
+                            formControlName="proposition" 
+                            [ngClass]="{'form-invalid-input': pf['proposition'].errors}"
+                            style="font-size: 70px;"
+                        >
+                        <div *ngIf="pf['proposition'].errors" class="form-invalid-message w-100 text-start">
+                            <div *ngIf="pf['proposition'].errors['maxlength']">Longueur maximale dépassée (4 cars.)</div>
+                            <div *ngIf="pf['proposition'].errors['pattern']">Veuillez entrer seulement des nombres !</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col text-center">
+                        <button
+                            type="submit"
+                            style="font-size: 30px"
+                            class="btn btn-success"
+                            (submit)="onSubmitProposition()"
+                            [disabled]="buttonDisabled"
+                        >
+                            <span>VALIDER</span>
+                        </button>
+                    </div>
+                </div>
+            </form>    
+        </div>
+        <div class="col-md-3"></div>
     </div>
 </div>

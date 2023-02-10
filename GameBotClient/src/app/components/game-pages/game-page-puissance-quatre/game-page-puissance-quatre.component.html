@@ -1,9 +1,31 @@
-<div class="container">
+<div class="container h-100">
     <div class="row">
-        <div class="col" *ngFor="let col of columns;">
-            <button class="btn btn-primary" (click)="onColumnClick(col)">
-                COLONNE {{ col }}
-            </button>
+        <div class="col text-center">
+            <h2>Puissance 4</h2>
         </div>
+    </div>
+    <div class="row">
+        <div class="col text-center"
+            style="min-height: 55px;"
+            *ngFor="let column of columns; let i = index"
+        >
+            <i *ngIf="selectedColumn === i" 
+                class="fa-arrow-down material-symbols-outlined" 
+                [ngStyle]="{'color': player?.color}"
+            >
+                keyboard_arrow_down
+            </i>
+        </div>
+    </div>
+    <div class="row h-50">
+        <a class="col text-center board-column"
+            *ngFor="let column of columns; let i = index"
+            [ngStyle]="(selectedColumn === i) ? columnHoverStyle : columnStyle"
+            (mouseenter)="highlightColumn(i)" (mouseleave)="resetHighlight()" (click)="onColumnClick(i)"
+        >
+            <h5>
+                {{ i + 1 }}
+            </h5>
+        </a>
     </div>
 </div>

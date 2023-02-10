@@ -53,7 +53,8 @@ export class GamePageJustePrixComponent {
     }
 
     this.gameBotService.sendCommand(command);
+    this.propositionForm.reset();
     this.buttonDisabled = true;
-    setTimeout(() => {this.buttonDisabled = false;}, 1000);
+    setTimeout(() => {this.buttonDisabled = false;}, 2000);
   }
 }

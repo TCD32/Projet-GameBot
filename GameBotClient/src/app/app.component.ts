@@ -43,7 +43,7 @@ export class AppComponent {
       }
     ]);
 
-    IGS.netSetServerURL("ws://172.26.16.1:5000");
+    IGS.netSetServerURL("ws://172.23.112.1:5000");
     IGS.agentSetName("GameBotClient");
     IGS.observeWebSocketState(this.isConnectedToServerChanged.bind(this));
 
@@ -98,7 +98,7 @@ export class AppComponent {
     var playerIdValue = serviceArguments[0].value;
     var messageValue = serviceArguments[1].value;
     
-    if(this.playerService.player != null && playerIdValue == this.playerService.player.id) {
+    if(this.playerService.player != null &&playerIdValue == this.playerService.player.id) {
       var log = senderAgentName + " called service " + serviceName;
       console.log(log);
 

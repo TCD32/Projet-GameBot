@@ -8,7 +8,6 @@ import { HeaderGamePickerComponent } from './components/header-game-picker/heade
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GameCardComponent } from './components/game-carousel-page/game-card/game-card.component';
 import { GameCardCarouselComponent } from './components/game-carousel-page/game-card-carousel/game-card-carousel.component';
-import { GameListPageComponent } from './components/game-list-page/game-list-page.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,7 +23,6 @@ import { GamePagesComponent } from './components/game-pages/game-pages.component
     HeaderGamePickerComponent,
     GameCardComponent,
     GameCardCarouselComponent,
-    GameListPageComponent,
     LoginPageComponent,
     GameCarouselPageComponent,
     GamePagePuissanceQuatreComponent,

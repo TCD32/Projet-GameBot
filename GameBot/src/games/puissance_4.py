@@ -7,6 +7,7 @@ from enum import Enum
 from PIL import Image as im
 
 from services.whiteboard_service import WhiteboardService
+from models.game_state import GameState
 from models.game import Game
 
 class CouleurCase(Enum):
@@ -20,8 +21,19 @@ class Grille:
     row = 6
 
     # on init la grille avec des cases vides
-    def __init__(self, whiteboard_service: WhiteboardService):
+    def __init__(
+        self,
+        whiteboard_service: WhiteboardService,
+        players_ids: list[str],
+        state: GameState,
+    ):
+        self.state = state
         self.whiteboard_service = whiteboard_service
+        # player ids to number
+        self.players_number = {
+            players_ids[0]: 1,
+            players_ids[1]: 2,
+        }
         #param jeu fini
         self.finie = False
         # dernière couleur placée, used to check victory
@@ -47,17 +59,23 @@ class Grille:
         return (self.grille[int(choix)][-1] == CouleurCase.Vide) and (int(choix) in [0,1,2,3,4,5,6])
     
     # ajout tuile colonne
-    def ajouter(self, joueur: int, colonne: int) -> tuple:
+    def ajouter(self, player_id: str, colonne: int) -> tuple:
+        joueur = self.players_number.get(player_id, -1)
         # check
+        if joueur == -1:
+            raise Exception("Puissance_4 : Wrong player number")
         if self.finie:
-            raise Exception("La partie est déjà finie")
+            raise Exception("Puissance_4 : Game is already finished")
         if CouleurCase(joueur) == self.derniereCouleur:
             raise Exception("Puissance_4 : Same player can't play twice in a row")
         if colonne not in range(Grille.col):
             raise Exception("Puissance_4 : Column ", colonne, "out of range")
         if self.grille[colonne][Grille.row-1] != CouleurCase.Vide:
-            raise Exception("colonne déjà pleine")
-        
+            raise Exception("Puissance_4 : Column is full")
+
+        # self.whiteboard_service.clear()
+        # self.whiteboard_service.chat(f"Au tour de {self.state.players[(player_id + 1) % 2].nickname} !")
+
         for ligne in range(Grille.row - 1, -1, -1):
             if self.grille[colonne][ligne - 1] != CouleurCase.Vide or ligne == 0:
                 self.grille[colonne][ligne] = CouleurCase(joueur)
@@ -65,7 +83,6 @@ class Grille:
                 self.checkFini(colonne, ligne)
                 self.colorer(colonne, ligne)
                 return (colonne, ligne)
-
 
     # arg : colonne = colonne du dernier placement;; ligne = ligne du dernier placement
     def checkFini (self, colonne: int, ligne:int) -> None:
@@ -136,32 +153,27 @@ class Grille:
         image_data = image_file.getvalue()
         image_b64 = base64.b64encode(image_data).decode("utf-8")
 
-        self.whiteboard_service.add_image(image_b64, 225.0, 50.0, 450.0, 350.0)
+        self.whiteboard_service.add_image(image_b64, 200.0, 50.0, 450.0, 350.0)
 
 
 class GamePuissance4(Game):
     grille: Grille
-    players_number: dict
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def start(self):
         super().start()
-        self.grille = Grille(self.whiteboard_service)
         players_ids = list(self.state.players.keys())
-        self.players_number = {
-            players_ids[0]: 1,
-            players_ids[1]: 2,
-        }
+        self.grille = Grille(self.whiteboard_service, players_ids, self.state)
 
     # formats commandes : {"colonne":int (0 - 6)}
     def command(self, command):
-        joueur = self.players_number.get(command.player_id, -1)
+        player_id = command.player_id
         colonne = command.command.get("colonne", -1)
-        if joueur == -1 or colonne == -1:
+        if colonne == -1:
             raise Exception("Puissance_4 : missing value in command :", command)
-        self.grille.ajouter(joueur, colonne)
+        self.grille.ajouter(player_id, colonne)
 
     def finished(self):
         if self.grille.isFinished():
