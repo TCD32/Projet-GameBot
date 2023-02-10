@@ -1,0 +1,2 @@
+CD d:\PROGRAMMATION\COURS\IHM\Agents\Whiteboard
+.\Whiteboard.exe --device "vEthernet (WSL)"

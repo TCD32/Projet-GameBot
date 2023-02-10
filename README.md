@@ -1,13 +1,16 @@
 # Projet GameBot
 
 ## Structure
-This repository contains two ingescape agents applications: `GameBot` and `GameBotClient`.
+This repository contains three ingescape agents applications: `GameBot` and `GameBotClient` and `Whiteboard`.
 
 ### GameBot [(documentation)](GameBot/README.md)
 `GameBot` is a Python application that runs a chat bot that allows its users to play games displayed on the Whiteboard. It hosts the available games logic, manage their states and allow players to be synchronised.
 
 ### GameBotClient [(documentation)](GameBotClient/README.md)
 `GameBotClient` is an Angular web application that provides an user interface for interacting with the `GameBot` and the games it offers.
+
+### Whiteboard
+`Whiteboard` is an application allowing its users to share an online whiteboard.
 
 ## Prerequisites
 
@@ -53,7 +56,9 @@ $ cd GameBotClient
 $ ng serve
 ```
 
-7. Open your browser and navigate to `http://localhost:4200` to use the `GameBotClient` application.
+7. Run the `Whiteboard` application
+
+8. Open your browser and navigate to `http://localhost:4200` to use the `GameBotClient` application.
 
 ## Screenshots
 
